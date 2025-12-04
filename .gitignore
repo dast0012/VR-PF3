@@ -102,3 +102,7 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 AR Temperature Sensor/Packages/com.ptc.vuforia.engine-10.29.6.tgz
 AR Temperature Sensor/Packages/com.ptc.vuforia.engine-11.3.4.tgz
+*.obj
+*.gbc
+/AR Temperature Sensor/Temp
+/AR Temperature Sensor/obj
