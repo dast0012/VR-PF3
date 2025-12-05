@@ -13,8 +13,8 @@ public class click : MonoBehaviour
 
     public Button Vb_on;
 
-    public InputField Hum;
-    public InputField field;
+    public Text Hum;
+    public Text field;
 
     void Start()
     {
@@ -39,21 +39,20 @@ public class click : MonoBehaviour
     {
         Debug.Log("Getting Data");
         field.text = "Loading...";
-        temperatureValue = "Temperature: " + arduinoConnector.temperature + " Celcius";
+        temperatureValue = $"{arduinoConnector.temperature} Celcius";
 
         Debug.Log(temperatureValue);
+        yield return new WaitForSeconds(3);
         field.text = temperatureValue;
-        yield break;
-        // yield return new WaitForSeconds(5);
     }
     IEnumerator GetData_Coroutine()
     {
         Debug.Log("Getting Data");
         Hum.text = "Loading...";
-        humidityValue = $"Humidity {arduinoConnector.humidity}%";
+        humidityValue = $"{arduinoConnector.humidity} %";
 
         Debug.Log(humidityValue);
+        yield return new WaitForSeconds(3);
         Hum.text = humidityValue;
-        yield break;
     }
 }
