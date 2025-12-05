@@ -7,7 +7,7 @@ using Vuforia;
 
 public class click : MonoBehaviour
 {
-    ArduinoConnector arduinoConnector;
+    public ArduinoConnector arduinoConnector;
     string temperatureValue = "Loading...";
     string humidityValue = "Loading...";
 
@@ -19,6 +19,10 @@ public class click : MonoBehaviour
     void Start()
     {
         Vb_on.onClick.AddListener(() => OnButtonPressed_on(Vb_on));
+
+        Debug.Log("Arduino connector is: " + arduinoConnector);
+        Debug.Log("Hum field is: " + Hum);
+        Debug.Log("Temp field is: " + field);
     }
 
     public void OnButtonPressed_on(Button Vb_on)
@@ -34,18 +38,19 @@ public class click : MonoBehaviour
     IEnumerator GetData_Coroutine1()
     {
         Debug.Log("Getting Data");
-        field.text = "";
-        temperatureValue = arduinoConnector.data;
+        field.text = "Loading...";
+        temperatureValue = "Temperature: " + arduinoConnector.temperature + " Celcius";
 
         Debug.Log(temperatureValue);
         field.text = temperatureValue;
         yield break;
+        // yield return new WaitForSeconds(5);
     }
     IEnumerator GetData_Coroutine()
     {
         Debug.Log("Getting Data");
-        Hum.text = "";
-        humidityValue = arduinoConnector.data;
+        Hum.text = "Loading...";
+        humidityValue = $"Humidity {arduinoConnector.humidity}%";
 
         Debug.Log(humidityValue);
         Hum.text = humidityValue;
