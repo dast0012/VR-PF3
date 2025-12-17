@@ -42,7 +42,7 @@ public class click : MonoBehaviour
         temperatureValue = $"{arduinoConnector.temperature} Celcius";
 
         Debug.Log(temperatureValue);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         field.text = temperatureValue;
     }
     IEnumerator GetData_Coroutine()
@@ -52,7 +52,7 @@ public class click : MonoBehaviour
         humidityValue = $"{arduinoConnector.humidity} %";
 
         Debug.Log(humidityValue);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         Hum.text = humidityValue;
     }
 }
