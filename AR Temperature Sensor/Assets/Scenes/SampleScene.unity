@@ -1655,7 +1655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0841f28ddbf2e2448d6d4dd3fcb7f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: 
+  port: 8888
   humidity: 
   temperature: 
 --- !u!1 &434546406

@@ -1,10 +1,17 @@
 using UnityEngine;
-using System.IO.Ports;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Globalization;
 
 public class ArduinoConnector : MonoBehaviour
 {
-    SerialPort serial = new SerialPort("COM4", 9600);
-    public string data = "";
+    public int port = 8888;
+
+    UdpClient client;
+    Thread thread;
+    volatile bool running;
     public string humidity = "";
     public string temperature = "";
 
@@ -12,43 +19,49 @@ public class ArduinoConnector : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        try
-        {
-            if (!serial.IsOpen)
-            {
-                serial.DtrEnable = true;   // <--- REQUIRED for Arduino
-                serial.RtsEnable = true;   // <--- REQUIRED for Arduino
-                serial.Open();
-                serial.ReadTimeout = 100; // The time the serial will wait before reading the value is 100 milliseconds
-            }
-        }
-        catch (System.Exception e)
-        {
-            Debug.Log("Not working Com: " + e.Message);
-        }
-        
+        // Opret UDP klient
+        client = new UdpClient(port);
+        client.EnableBroadcast = true;
+
+        // Start modtage-tråd
+        running = true;
+        thread = new Thread(ReceiveLoop);
+        thread.IsBackground = true;
+        thread.Start();
+
     }
 
-    // Update is called once per frame
-    void Update()
+    void ReceiveLoop()
     {
-        if (!serial.IsOpen) return;
-        try
+        IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, port);
+
+        while (running)
         {
-            Debug.Log("Incomming data: " + data);
-            data = serial.ReadLine();
-            string[] parts = data.Split(',');
-            humidity = parts[0];
-            temperature = parts[1];
+            try
+            {
+                // Modtag data fra Arduino
+                byte[] data = client.Receive(ref anyIP);
+                string msg = Encoding.ASCII.GetString(data).Trim();
+
+                // Forventer: "humidity,temperature"
+                string[] parts = msg.Split(',');
+
+                if (parts.Length >= 2)
+                {
+                    humidity = parts[0];
+                    temperature = parts[1];
+                }
+            }
+            catch
+            {
+                // Ignorer fejl (fx når Unity lukkes)
+            }
         }
-        catch (System.TimeoutException)
-        {
-            // no data yet = ignore
-        }
-        catch (System.Exception e)
-        {
-            Debug.Log("Serial read error: " + e.Message);
-        }
-        
+    }
+
+    void OnDestroy()
+    {
+        running = false;
+        client?.Close();
     }
 }

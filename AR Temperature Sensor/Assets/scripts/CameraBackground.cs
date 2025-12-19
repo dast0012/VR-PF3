@@ -34,7 +34,7 @@ public class CameraBackground : MonoBehaviour
         }
         if (!hasBackCamera)
         {
-            GetComponent<Renderer>().material = alternativeBackground;
+            //GetComponent<Renderer>().material = alternativeBackground;
             Debug.Log("No back-facing camera found");
         }
     }
